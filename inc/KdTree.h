@@ -12,6 +12,8 @@ public:
     void insert(const Node& node);
     void remove(const Node& node);
     Node nearestNeighbour(const Node& node) const;
+    void print() const;
+    void print_preorder() const;
 
     void clear();
     bool empty() const;
@@ -23,4 +25,6 @@ private:
     Node findMin(const std::shared_ptr<Node>& current, int axis, int depth) const;
     void nearestNeighbour(const std::shared_ptr<Node>& root, const Node& target,
                                   Node*& best, double& bestDist, int depth) const;
+    void print(const std::shared_ptr<Node>& current, int depth) const;
+    void print_preorder(const std::shared_ptr<Node>& current) const;
 };

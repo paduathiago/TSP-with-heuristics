@@ -173,3 +173,34 @@ void KdTree::nearestNeighbour(const std::shared_ptr<Node>& root,
         nearestNeighbour(second, target, best, bestDist, depth + 1);
     }
 }
+
+void KdTree::print() const {
+    print(root, 0);
+}
+
+void KdTree::print(const std::shared_ptr<Node>& current, int depth) const {
+    if (!current) return;
+
+    print(current->left, depth + 1);
+
+    for (int i = 0; i < depth; i++) {
+        std::cout << "  ";
+    }
+
+    std::cout << current->id << " (" << current->x << ", " << current->y << ")" << std::endl;
+
+    print(current->right, depth + 1);
+}
+
+void KdTree::print_preorder() const {
+    print_preorder(root);
+}
+
+void KdTree::print_preorder(const std::shared_ptr<Node>& current) const {
+    if (!current) return;
+
+    std::cout << current->id << " (" << current->x << ", " << current->y << ")" << std::endl;
+
+    print_preorder(current->left);
+    print_preorder(current->right);
+}
