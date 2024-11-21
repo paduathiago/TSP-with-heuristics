@@ -12,6 +12,9 @@ public:
     void insert(const Node& node);
     void remove(const Node& node);
     Node nearestNeighbour(const Node& node) const;
+
+    Node findNodeFromId(int id) const;
+
     void print() const;
     void print_preorder() const;
 

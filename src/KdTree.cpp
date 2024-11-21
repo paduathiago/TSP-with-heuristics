@@ -174,6 +174,43 @@ void KdTree::nearestNeighbour(const std::shared_ptr<Node>& root,
     }
 }
 
+Node KdTree::findNodeFromId(int id) const {
+    return findNodeFromId(root, id);
+}
+
+Node KdTree::findNodeFromId(const std::shared_ptr<Node>& current, int id) const
+{
+    if (!current) {
+        throw std::runtime_error("Node not found");
+    }
+
+    if (current->id == id) {
+        return *current;
+    }
+
+    Node left = current->left ? findNodeFromId(current->left, id) : Node();
+    Node right = current->right ? findNodeFromId(current->right, id) : Node();
+
+    if (left.id == id) return left;
+    if (right.id == id) return right;
+
+    throw std::runtime_error("Node not found");
+
+    // if (!current)
+    //     throw std::runtime_error("Node not found");
+
+    // if (current->id == id)
+    //     return *current;
+
+    // Node left = findNodeFromId(current->left, id);
+    // Node right = findNodeFromId(current->right, id);
+
+    // if (left.id == id)
+    //     return left;
+    // if (right.id == id)
+    //     return right;
+}
+
 void KdTree::print() const {
     print(root, 0);
 }
