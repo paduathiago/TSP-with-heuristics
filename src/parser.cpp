@@ -1,12 +1,6 @@
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
+#include "parser.h"
 
-#include "Node.h"
-
-std::vector<Node> parseTSPFile(const std::string& filename) {
+std::vector<Node> Parser::parseTSPFile(const std::string& filename) {
     std::vector<Node> cities;
     std::ifstream file;
     file.open(filename);

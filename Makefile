@@ -11,7 +11,7 @@ INCLUDE_DIR = inc
 OBJ_DIR = build
 
 # Diretórios de bibliotecas (se houver)
-LIB_DIRS = 
+LIB_DIRS =
 
 # Bibliotecas (se houver alguma, por exemplo, Boost ou outras)
 LIBS =

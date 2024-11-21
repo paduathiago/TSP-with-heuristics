@@ -12,6 +12,8 @@ KdTree::KdTree(std::vector<Node>& nodes) {
         insert(node);
 }
 
+KdTree::~KdTree() {}
+
 void KdTree::insert(const Node& node) {
     insert(root, node, 0);
 }
