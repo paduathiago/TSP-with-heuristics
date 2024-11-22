@@ -17,7 +17,7 @@ LIB_DIRS =
 LIBS =
 
 # Arquivos fonte
-SRC_FILES = $(SRC_DIR)/main.cpp $(SRC_DIR)/KdTree.cpp $(SRC_DIR)/parser.cpp
+SRC_FILES = $(SRC_DIR)/main.cpp $(SRC_DIR)/KdTree.cpp $(SRC_DIR)/parser.cpp $(SRC_DIR)/NearestNeighbourHeuristic.cpp
 
 # Arquivos objeto (no diretório build)
 OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
