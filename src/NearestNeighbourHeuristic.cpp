@@ -9,9 +9,8 @@ void NearestNeighbor::solve(std::string inputFile)
     KdTree tree(cities);
 
     std::random_device rd;
-    std::mt19937 gen(42);
+    std::mt19937 gen(42);  //fixed seed
 
-    // ATENTION
     std::uniform_int_distribution<> dist(1, numberOfNodes);
 
     int randomId = dist(gen);
