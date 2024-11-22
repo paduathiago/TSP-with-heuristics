@@ -4,10 +4,11 @@
 
 KdTree::KdTree() {
     root = nullptr;
+    size = 0;
 }
 
 KdTree::KdTree(std::vector<Node>& nodes) {
-    root = nullptr;
+    KdTree();
     for (const Node& node : nodes)
         insert(node);
 }
@@ -16,6 +17,7 @@ KdTree::~KdTree() {}
 
 void KdTree::insert(const Node& node) {
     insert(root, node, 0);
+    ++size;
 }
 
 void KdTree::insert(std::shared_ptr<Node>& currentNode, const Node& newNode, int depth) {
@@ -87,7 +89,7 @@ std::shared_ptr<Node> KdTree::remove(std::shared_ptr<Node>& current, const Node&
             current->y = replacement.y;
             remove(current->left, replacement, depth + 1);
         }
-
+        --size;
         return removedNode;
     }
 
@@ -204,6 +206,10 @@ void KdTree::nearestNeighbour(const std::shared_ptr<Node>& root,
     if (planeDist * planeDist < bestDist) {
         nearestNeighbour(second, target, best, bestDist, depth + 1);
     }
+}
+
+bool KdTree::empty() const {
+    return size == 0;
 }
 
 void KdTree::print() const {

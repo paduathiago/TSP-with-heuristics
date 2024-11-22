@@ -23,6 +23,8 @@ public:
 
 private:
     std::shared_ptr<Node> root;
+    unsigned size;
+
     void insert(std::shared_ptr<Node>& currentNode, const Node& newNode, int depth);
     std::shared_ptr<Node> remove(std::shared_ptr<Node>& root, const Node& node, int depth);
     Node findMin(const std::shared_ptr<Node>& current, int axis, int depth) const;
