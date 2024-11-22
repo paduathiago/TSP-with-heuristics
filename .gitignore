@@ -1,4 +1,4 @@
 build
-kroA100.tsp
 kdtree_program
-test.txt
+test*
+*.pdf

@@ -11,7 +11,7 @@
 #include "NearestNeighbourHeuristic.h"
 
 int main() {
-    std::string filename = "test.txt";
+    std::string filename = "instances/EUC_2D/berlin52.tsp";
 
     NearestNeighbor nn;
     nn.solve(filename);

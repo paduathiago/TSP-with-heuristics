@@ -84,7 +84,7 @@ std::shared_ptr<Node> KdTree::remove(std::shared_ptr<Node>& current, const Node&
         if (current->right)
         {
             // Replace with the smallest node in the right subtree
-            std::shared_ptr<Node> replacement = findMin(current->right, axis, 0);
+            std::shared_ptr<Node> replacement = findMin(current->right, axis, depth + 1);
             current->id = replacement->id;
             current->x = replacement->x;
             current->y = replacement->y;
@@ -93,7 +93,7 @@ std::shared_ptr<Node> KdTree::remove(std::shared_ptr<Node>& current, const Node&
         else if (current->left)
         {
             // Replace with the smallest node in the left subtree
-            std::shared_ptr<Node> replacement = findMin(current->left, axis, 0);
+            std::shared_ptr<Node> replacement = findMin(current->left, axis, depth + 1);
             current->id = replacement->id;
             current->x = replacement->x;
             current->y = replacement->y;
