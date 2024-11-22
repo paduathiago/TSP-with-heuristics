@@ -14,6 +14,7 @@ class Parser
 public:
     Parser() = default;
     std::vector<Node> parseTSPFile(const std::string& filename);
+    unsigned getNumberOfNodes(const std::string& filename) const;
 };
 
 #endif // PARSER_H

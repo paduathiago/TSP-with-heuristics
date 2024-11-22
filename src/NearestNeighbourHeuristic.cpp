@@ -5,12 +5,14 @@
 void NearestNeighbor::solve(std::string inputFile)
 {
     std::vector<Node> cities = parser.parseTSPFile(inputFile);
+    numberOfNodes = parser.getNumberOfNodes(inputFile);
     KdTree tree(cities);
 
     std::random_device rd;
     std::mt19937 gen(42);
 
-    std::uniform_int_distribution<> dist(1, 6);
+    // ATENTION
+    std::uniform_int_distribution<> dist(1, numberOfNodes);
 
     int randomId = dist(gen);
 

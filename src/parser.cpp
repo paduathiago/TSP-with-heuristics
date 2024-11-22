@@ -40,21 +40,37 @@ std::vector<Node> Parser::parseTSPFile(const std::string& filename) {
     return cities;
 }
 
-// int main() {
-//     const std::string filename = "../kroA100.tsp";
+unsigned Parser::getNumberOfNodes(const std::string& filename) const
+{
+    std::ifstream file;
+    file.open(filename);
 
-//     try {
-//         std::vector<Node> cities = parseTSPFile(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file.");
+    }
 
-//         // Exibe as cidades extraídas
-//         std::cout << "Cidades lidas do arquivo:" << std::endl;
-//         for (const Node& city : cities)
-//         {
-//             std::cout << "ID: " << city.id << ", X: " << city.x << ", Y: " << city.y << std::endl;
-//         }
-//     } catch (const std::exception& e) {
-//         std::cerr << "Erro: " << e.what() << std::endl;
-//     }
+    std::string line;
 
-//     return 0;
-// }
+    while (std::getline(file, line))
+    {
+        // remove trailing spaces to make parsing easier
+        line.erase(line.find_last_not_of(" \n\r\t") + 1);
+
+        if (line.find("DIMENSION:") != std::string::npos) {
+            std::istringstream iss(line);
+            std::string label;
+            unsigned dimension;
+            if (iss >> label >> dimension)
+            {
+                file.close();
+                return dimension;
+            }
+            else
+            {
+                throw std::runtime_error("Error reading DIMENSION line.");
+                return 0;
+            }
+        }
+    }
+    return 0;
+}
