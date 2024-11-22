@@ -2,12 +2,14 @@
 
 #include <limits>
 
-KdTree::KdTree() {
+KdTree::KdTree()
+{
     root = nullptr;
     size = 0;
 }
 
-KdTree::KdTree(std::vector<Node>& nodes) {
+KdTree::KdTree(std::vector<Node>& nodes)
+{
     KdTree();
     for (const Node& node : nodes)
         insert(node);
@@ -15,7 +17,8 @@ KdTree::KdTree(std::vector<Node>& nodes) {
 
 KdTree::~KdTree() {}
 
-void KdTree::insert(const Node& node) {
+void KdTree::insert(const Node& node)
+{
     insert(root, node, 0);
     ++size;
 }
@@ -44,7 +47,12 @@ void KdTree::insert(std::shared_ptr<Node>& currentNode, const Node& newNode, int
 
 std::shared_ptr<Node> KdTree::remove(const Node& node)
 {
-    return remove(root, node, 0);
+    std::shared_ptr<Node> removedNode = remove(root, node, 0);
+    if (removedNode)
+    {
+        --size;
+    }
+    return removedNode;
 }
 
 std::shared_ptr<Node> KdTree::remove(std::shared_ptr<Node>& current, const Node& target, int depth)
@@ -54,7 +62,9 @@ std::shared_ptr<Node> KdTree::remove(std::shared_ptr<Node>& current, const Node&
     */
 
     if (!current)
-        return nullptr;
+    {
+        throw std::runtime_error("Node not found");
+    }
 
     // Current node will be removed
     if (current->id == target.id)
@@ -74,22 +84,22 @@ std::shared_ptr<Node> KdTree::remove(std::shared_ptr<Node>& current, const Node&
         if (current->right)
         {
             // Replace with the smallest node in the right subtree
-            Node replacement = findMin(current->right, axis, 0);
-            current->id = replacement.id;
-            current->x = replacement.x;
-            current->y = replacement.y;
-            remove(current->right, replacement, depth + 1);
+            std::shared_ptr<Node> replacement = findMin(current->right, axis, 0);
+            current->id = replacement->id;
+            current->x = replacement->x;
+            current->y = replacement->y;
+            remove(current->right, *replacement, depth + 1);
         }
         else if (current->left)
         {
             // Replace with the smallest node in the left subtree
-            Node replacement = findMin(current->left, axis, 0);
-            current->id = replacement.id;
-            current->x = replacement.x;
-            current->y = replacement.y;
-            remove(current->left, replacement, depth + 1);
+            std::shared_ptr<Node> replacement = findMin(current->left, axis, 0);
+            current->id = replacement->id;
+            current->x = replacement->x;
+            current->y = replacement->y;
+            current->right = std::move(current->left);
+            remove(current->right, *replacement, depth + 1);
         }
-        --size;
         return removedNode;
     }
 
@@ -105,7 +115,7 @@ std::shared_ptr<Node> KdTree::remove(std::shared_ptr<Node>& current, const Node&
     }
 }
 
-Node KdTree::findMin(const std::shared_ptr<Node>& current, int axis, int depth) const {
+std::shared_ptr<Node> KdTree::findMin(const std::shared_ptr<Node>& current, int axis, int depth) const {
     if (!current) {
         throw std::runtime_error("Subtree is empty");
     }
@@ -117,24 +127,25 @@ Node KdTree::findMin(const std::shared_ptr<Node>& current, int axis, int depth) 
         if (current->left) {
             return findMin(current->left, axis, depth + 1);
         }
-        return *current;
+        return current;
     }
 
     // Comparar recursivamente com os menores das subárvores
-    Node leftMin = current->left ? findMin(current->left, axis, depth + 1) : *current;
-    Node rightMin = current->right ? findMin(current->right, axis, depth + 1) : *current;
+    std::shared_ptr<Node> leftMin = current->left ? findMin(current->left, axis, depth + 1) : current;
+    std::shared_ptr<Node> rightMin = current->right ? findMin(current->right, axis, depth + 1) : current;
 
-    Node minNode = *current;
-    if (leftMin.x < minNode.x || (axis == 1 && leftMin.y < minNode.y)) {
+    std::shared_ptr<Node> minNode = current;
+    if (leftMin->x < minNode->x || (axis == 1 && leftMin->y < minNode->y)) {
         minNode = leftMin;
     }
-    if (rightMin.x < minNode.x || (axis == 1 && rightMin.y < minNode.y)) {
+    if (rightMin->x < minNode->x || (axis == 1 && rightMin->y < minNode->y)) {
         minNode = rightMin;
     }
 
     return minNode;
 }
 
+//ATENTIOON
 double squaredDistance(const Node& a, const Node& b) {
     return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
 }
@@ -163,19 +174,19 @@ std::shared_ptr<Node> KdTree::findNodeById(const std::shared_ptr<Node>& currentN
     return findNodeById(currentNode->right, id, depth + 1);
 }
 
-Node KdTree::nearestNeighbour(const Node& node) const {
-    Node* best = nullptr;
+std::shared_ptr<Node> KdTree::nearestNeighbour(const Node& node) const {
+    std::shared_ptr<Node> best = nullptr;
     double bestDist = std::numeric_limits<double>::max();
 
     nearestNeighbour(root, node, best, bestDist, 0);
 
-    if (best) return *best;
+    if (best) return best;
     throw std::runtime_error("No nearest neighbour found.");
 }
 
 void KdTree::nearestNeighbour(const std::shared_ptr<Node>& root,
                               const Node& target,
-                              Node*& best,
+                              std::shared_ptr<Node>& best,
                               double& bestDist,
                               int depth
                              ) const
@@ -188,7 +199,7 @@ void KdTree::nearestNeighbour(const std::shared_ptr<Node>& root,
     // Atualiza o melhor nó se a distância for menor
     if (dist < bestDist) {
         bestDist = dist;
-        best = root.get();
+        best = root;
     }
 
     // Define o eixo de comparação (0 -> x, 1 -> y)

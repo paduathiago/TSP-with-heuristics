@@ -17,17 +17,12 @@ void NearestNeighbor::solve(std::string inputFile)
     // First Node, chosen randomly
     std::shared_ptr<Node> newNodeInSolution = tree.findNodeById(randomId);
     std::shared_ptr<Node> oldNodeInSolution;
-    std::cout << "First Node: " << newNodeInSolution->id << std::endl;
     while (!tree.empty())
     {
         solution.push_back(*newNodeInSolution);
-        std::cout << "sol " << std::endl;
-        printSolution();
-        std::cout << "sol " << std::endl;
         oldNodeInSolution = tree.remove(*newNodeInSolution);
-        tree.print_preorder();
-        newNodeInSolution = tree.nearestNeighbour(*oldNodeInSolution);
-        std::cout << "New Node: " << newNodeInSolution->id << std::endl;
+        if (!tree.empty())
+            newNodeInSolution = tree.nearestNeighbour(*oldNodeInSolution);
     }
 }
 
