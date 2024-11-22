@@ -20,7 +20,7 @@ public:
     NearestNeighbor() : numberOfNodes(0) {}
     void solve(std::string inputFile);
     void printSolution() const;
-
+    float totalDistance() const;
 };
 
 #endif // NEAREST_NEIGHBOR_HEURISTIC_H

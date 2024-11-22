@@ -35,3 +35,14 @@ void NearestNeighbor::printSolution() const
         std::cout << node.id << " " << node.x << " " << node.y << std::endl;
     }
 }
+
+float NearestNeighbor::totalDistance() const
+{
+    float distance = 0.0;
+    for (int i = 0; i < solution.size() - 1; i++)
+    {
+        distance += solution[i].distance(solution[i + 1]);
+    }
+    distance += solution[solution.size() - 1].distance(solution[0]);
+    return distance;
+}

@@ -115,7 +115,8 @@ std::shared_ptr<Node> KdTree::remove(std::shared_ptr<Node>& current, const Node&
     }
 }
 
-std::shared_ptr<Node> KdTree::findMin(const std::shared_ptr<Node>& current, int axis, int depth) const {
+std::shared_ptr<Node> KdTree::findMin(const std::shared_ptr<Node>& current, int axis, int depth) const
+{
     if (!current) {
         throw std::runtime_error("Subtree is empty");
     }
@@ -193,28 +194,28 @@ void KdTree::nearestNeighbour(const std::shared_ptr<Node>& root,
 {
     if (!root) return;
 
-    // Calcula a distância ao nó atual
     double dist = squaredDistance(*root, target);
 
-    // Atualiza o melhor nó se a distância for menor
-    if (dist < bestDist) {
+    if (dist < bestDist)
+    {
         bestDist = dist;
         best = root;
     }
 
-    // Define o eixo de comparação (0 -> x, 1 -> y)
+    // Defines the comparison axis (0 -> x, 1 -> y)
     int axis = depth % 2;
     bool leftFirst = (axis == 0 && target.x < root->x) || (axis == 1 && target.y < root->y);
 
-    // Busca no subárvore principal
+    // Search the side of the splitting plane that the target is located
     const std::shared_ptr<Node>& first = leftFirst ? root->left : root->right;
     const std::shared_ptr<Node>& second = leftFirst ? root->right : root->left;
 
     nearestNeighbour(first, target, best, bestDist, depth + 1);
 
-    // Verifica se a distância ao plano divisor pode conter um nó mais próximo
+    // Check if the distance to the splitting plane could contain a closer node
     double planeDist = (axis == 0 ? target.x - root->x : target.y - root->y);
-    if (planeDist * planeDist < bestDist) {
+    if (planeDist * planeDist < bestDist)
+    {
         nearestNeighbour(second, target, best, bestDist, depth + 1);
     }
 }
