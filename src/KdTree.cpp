@@ -2,15 +2,16 @@
 
 #include <limits>
 
-KdTree::KdTree()
+KdTree::KdTree(std::unique_ptr<DistanceMeasure> distanceMeasure)
 {
     root = nullptr;
     size = 0;
+    this->distanceMeasure = std::move(distanceMeasure);
 }
 
-KdTree::KdTree(std::vector<Node>& nodes)
+KdTree::KdTree(std::vector<Node>& nodes, std::unique_ptr<DistanceMeasure> distanceMeasure)
+    : KdTree(std::move(distanceMeasure))
 {
-    KdTree();
     for (const Node& node : nodes)
         insert(node);
 }
@@ -146,11 +147,6 @@ std::shared_ptr<Node> KdTree::findMin(const std::shared_ptr<Node>& current, int 
     return minNode;
 }
 
-//ATENTIOON
-double squaredDistance(const Node& a, const Node& b) {
-    return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
-}
-
 std::shared_ptr<Node> KdTree::findNodeById(int id) const {
     return findNodeById(root, id, 0);
 }
@@ -194,7 +190,7 @@ void KdTree::nearestNeighbour(const std::shared_ptr<Node>& root,
 {
     if (!root) return;
 
-    double dist = squaredDistance(*root, target);
+    double dist = distanceMeasure->distance(*root, target);
 
     if (dist < bestDist)
     {

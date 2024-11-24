@@ -13,7 +13,7 @@
 int main() {
     std::string filename = "instances/EUC_2D/berlin52.tsp";
 
-    NearestNeighbor nn;
+    NearestNeighbour nn;
     nn.solve(filename);
     nn.printSolution();
 

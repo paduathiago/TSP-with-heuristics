@@ -2,14 +2,17 @@
 
 #include <random>
 
-void NearestNeighbor::solve(std::string inputFile)
+void NearestNeighbour::solve(std::string inputFile)
 {
     std::vector<Node> cities = parser.parseTSPFile(inputFile);
     numberOfNodes = parser.getNumberOfNodes(inputFile);
-    KdTree tree(cities);
+    std::unique_ptr<DistanceMeasure> distanceMeasure = parser.getDistanceMeasure(inputFile);
+    setDistanceMeasure(std::move(distanceMeasure));
+
+    KdTree tree(cities, std::move(this->distanceMeasure));
 
     std::random_device rd;
-    std::mt19937 gen(42);  //fixed seed
+    std::mt19937 gen(42);  // fixed seed
 
     std::uniform_int_distribution<> dist(1, numberOfNodes);
 
@@ -21,13 +24,15 @@ void NearestNeighbor::solve(std::string inputFile)
     while (!tree.empty())
     {
         solution.push_back(*newNodeInSolution);
+        printSolution();  // REMOVE
+        std:: cout << "------------------" << std::endl;
         oldNodeInSolution = tree.remove(*newNodeInSolution);
         if (!tree.empty())
             newNodeInSolution = tree.nearestNeighbour(*oldNodeInSolution);
     }
 }
 
-void NearestNeighbor::printSolution() const
+void NearestNeighbour::printSolution() const
 {
     for (const Node& node : solution)
     {
@@ -35,13 +40,18 @@ void NearestNeighbor::printSolution() const
     }
 }
 
-float NearestNeighbor::totalDistance() const
+void NearestNeighbour::setDistanceMeasure(std::unique_ptr<DistanceMeasure> distanceMeasure)
+{
+    this->distanceMeasure = std::move(distanceMeasure);
+}
+
+double NearestNeighbour::totalDistance() const
 {
     float distance = 0.0;
-    for (int i = 0; i < solution.size() - 1; i++)
+    for (int i = 0; i < int(solution.size() - 1); i++)
     {
-        distance += solution[i].distance(solution[i + 1]);
+        distance += distanceMeasure->distance(solution[i], solution[i + 1]);
     }
-    distance += solution[solution.size() - 1].distance(solution[0]);
+    distance += distanceMeasure->distance(solution[solution.size() - 1], solution[0]);
     return distance;
 }

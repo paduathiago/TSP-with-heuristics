@@ -1,5 +1,5 @@
-#ifndef NEAREST_NEIGHBOR_HEURISTIC_H
-#define NEAREST_NEIGHBOR_HEURISTIC_H
+#ifndef NEAREST_NEIGHBOUR_HEURISTIC_H
+#define NEAREST_NEIGHBOUR_HEURISTIC_H
 
 #include <vector>
 
@@ -7,20 +7,23 @@
 #include "parser.h"
 #include "KdTree.h"
 #include "Node.h"
+#include "DistanceMeasure.h"
 
-class NearestNeighbor
+class NearestNeighbour
 {
 private:
     Parser parser;
 
     unsigned numberOfNodes;
     std::vector<Node> solution;
+    std::unique_ptr<DistanceMeasure> distanceMeasure;
+    void setDistanceMeasure(const std::unique_ptr<DistanceMeasure> distanceMeasure);
 
 public:
-    NearestNeighbor() : numberOfNodes(0) {}
+    NearestNeighbour() : numberOfNodes(0) {}
     void solve(std::string inputFile);
     void printSolution() const;
-    float totalDistance() const;
+    double totalDistance() const;
 };
 
-#endif // NEAREST_NEIGHBOR_HEURISTIC_H
+#endif // NEAREST_NEIGHBOUR_HEURISTIC_H

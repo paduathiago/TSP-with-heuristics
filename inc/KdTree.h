@@ -2,14 +2,15 @@
 #define KD_TREE_H
 
 #include "Node.h"
+#include "DistanceMeasure.h"
 
 #include <vector>
 
 class KdTree
 {
 public:
-    KdTree();
-    KdTree(std::vector<Node>& nodes);
+    KdTree(std::unique_ptr<DistanceMeasure> distanceMeasure);
+    KdTree(std::vector<Node>& nodes, std::unique_ptr<DistanceMeasure> distanceMeasure);
     ~KdTree();
 
     void insert(const Node& node);
@@ -27,6 +28,7 @@ public:
 private:
     std::shared_ptr<Node> root;
     unsigned size;
+    std::unique_ptr<DistanceMeasure> distanceMeasure;
 
     void insert(std::shared_ptr<Node>& currentNode, const Node& newNode, int depth);
     std::shared_ptr<Node> remove(std::shared_ptr<Node>& root, const Node& node, int depth);

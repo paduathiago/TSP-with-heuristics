@@ -74,3 +74,33 @@ unsigned Parser::getNumberOfNodes(const std::string& filename) const
     }
     return 0;
 }
+
+std::unique_ptr<DistanceMeasure> Parser::getDistanceMeasure(const std::string& filename) const
+{
+    std::ifstream file;
+    file.open(filename);
+
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file.");
+    }
+
+    std::string line;
+
+    while (std::getline(file, line))
+    {
+        // remove trailing spaces to make parsing easier
+        line.erase(line.find_last_not_of(" \n\r\t") + 1);
+
+        if (line.find("EDGE_WEIGHT_TYPE: EUC_2D") != std::string::npos or line.find("EDGE_WEIGHT_TYPE : EUC_2D") != std::string::npos)
+        {
+            return std::make_unique<EuclideanDistance>();
+        }
+        else if (line.find("EDGE_WEIGHT_TYPE: ATT") != std::string::npos)
+        {
+            return std::make_unique<PseudoEuclideanDistance>();
+        }
+    }
+
+    throw std::runtime_error("Could not determine distance measure.");
+    return nullptr;
+}
