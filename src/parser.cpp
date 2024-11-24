@@ -1,6 +1,9 @@
 #include "parser.h"
 
-std::vector<Node> Parser::parseTSPFile(const std::string& filename) {
+#include <regex>
+
+std::vector<Node> Parser::parseTSPFile(const std::string& filename)
+{
     std::vector<Node> cities;
     std::ifstream file;
     file.open(filename);
@@ -56,22 +59,16 @@ unsigned Parser::getNumberOfNodes(const std::string& filename) const
         // remove trailing spaces to make parsing easier
         line.erase(line.find_last_not_of(" \n\r\t") + 1);
 
-        if (line.find("DIMENSION:") != std::string::npos) {
-            std::istringstream iss(line);
-            std::string label;
-            unsigned dimension;
-            if (iss >> label >> dimension)
-            {
-                file.close();
-                return dimension;
-            }
-            else
-            {
-                throw std::runtime_error("Error reading DIMENSION line.");
-                return 0;
-            }
+        std::regex dimension_regex(R"(DIMENSION\s*:\s*(\d+))");
+        std::smatch match;
+        if (std::regex_search(line, match, dimension_regex) && match.size() > 1)
+        {
+            unsigned dimension = std::stoi(match.str(1));
+            file.close();
+            return dimension;
         }
     }
+    throw std::runtime_error("Error reading DIMENSION line.");
     return 0;
 }
 
@@ -91,11 +88,13 @@ std::unique_ptr<DistanceMeasure> Parser::getDistanceMeasure(const std::string& f
         // remove trailing spaces to make parsing easier
         line.erase(line.find_last_not_of(" \n\r\t") + 1);
 
-        if (line.find("EDGE_WEIGHT_TYPE: EUC_2D") != std::string::npos or line.find("EDGE_WEIGHT_TYPE : EUC_2D") != std::string::npos)
+        std::regex euc_2d_regex(R"(EDGE_WEIGHT_TYPE\s*:\s*EUC_2D)");
+        std::regex att_regex(R"(EDGE_WEIGHT_TYPE\s*:\s*ATT)");
+        if (std::regex_search(line, euc_2d_regex))
         {
             return std::make_unique<EuclideanDistance>();
         }
-        else if (line.find("EDGE_WEIGHT_TYPE: ATT") != std::string::npos)
+        else if (std::regex_search(line, att_regex))
         {
             return std::make_unique<PseudoEuclideanDistance>();
         }
