@@ -124,7 +124,8 @@ std::shared_ptr<Node> KdTree::findMin(const std::shared_ptr<Node>& current, int 
 
     int currentAxis = depth % 2;
 
-    if (currentAxis == axis) {
+    if (currentAxis == axis)
+    {
         // Encontrar o menor nó no eixo atual
         if (current->left) {
             return findMin(current->left, axis, depth + 1);
@@ -137,10 +138,10 @@ std::shared_ptr<Node> KdTree::findMin(const std::shared_ptr<Node>& current, int 
     std::shared_ptr<Node> rightMin = current->right ? findMin(current->right, axis, depth + 1) : current;
 
     std::shared_ptr<Node> minNode = current;
-    if (leftMin->x < minNode->x || (axis == 1 && leftMin->y < minNode->y)) {
+    if ((axis == 0 and leftMin->x < minNode->x) || (axis == 1 && leftMin->y < minNode->y)) {
         minNode = leftMin;
     }
-    if (rightMin->x < minNode->x || (axis == 1 && rightMin->y < minNode->y)) {
+    if ((axis == 0 and rightMin->x < minNode->x) || (axis == 1 && rightMin->y < minNode->y)) {
         minNode = rightMin;
     }
 
@@ -239,14 +240,14 @@ void KdTree::print(const std::shared_ptr<Node>& current, int depth) const {
 }
 
 void KdTree::print_preorder() const {
-    print_preorder(root);
+    print_preorder(root, 'O');
 }
 
-void KdTree::print_preorder(const std::shared_ptr<Node>& current) const {
+void KdTree::print_preorder(const std::shared_ptr<Node>& current, char childType) const {
     if (!current) return;
 
-    std::cout << current->id << " (" << current->x << ", " << current->y << ")" << std::endl;
+    std::cout << childType << ": " << current->id << " (" << current->x << ", " << current->y << ")" << std::endl;
 
-    print_preorder(current->left);
-    print_preorder(current->right);
+    print_preorder(current->left, 'L');
+    print_preorder(current->right, 'R');
 }
