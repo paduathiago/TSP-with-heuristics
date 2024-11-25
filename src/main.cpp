@@ -11,8 +11,14 @@
 #include "NearestNeighbourHeuristic.h"
 #include "DistanceMeasure.h"
 
-int main() {
-    std::string filename = "instances/EUC_2D/berlin52.tsp";
+int main(int argc, char* argv[]) {
+    if (argc < 2)
+    {
+        std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
+        return 1;
+    }
+
+    std::string filename = argv[1];
 
     NearestNeighbour nn;
     nn.solve(filename);
