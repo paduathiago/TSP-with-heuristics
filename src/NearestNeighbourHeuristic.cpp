@@ -4,6 +4,8 @@
 
 void NearestNeighbour::solve(std::string inputFile)
 {
+    this->inputFile = inputFile;
+
     std::vector<Node> cities = parser.parseTSPFile(inputFile);
     numberOfNodes = parser.getNumberOfNodes(inputFile);
     std::unique_ptr<DistanceMeasure> distanceMeasure = parser.getDistanceMeasure(inputFile);
@@ -24,8 +26,6 @@ void NearestNeighbour::solve(std::string inputFile)
     while (!tree.empty())
     {
         solution.push_back(*newNodeInSolution);
-        printSolution();  // REMOVE
-        std:: cout << "------------------" << std::endl;
         oldNodeInSolution = tree.remove(*newNodeInSolution);
         if (!tree.empty())
             newNodeInSolution = tree.nearestNeighbour(*oldNodeInSolution);
@@ -45,9 +45,13 @@ void NearestNeighbour::setDistanceMeasure(std::unique_ptr<DistanceMeasure> dista
     this->distanceMeasure = std::move(distanceMeasure);
 }
 
-double NearestNeighbour::totalDistance() const
+double NearestNeighbour::totalDistance()
 {
     float distance = 0.0;
+
+    std::unique_ptr<DistanceMeasure> distMeasure = parser.getDistanceMeasure(this->inputFile);
+    setDistanceMeasure(std::move(distMeasure));
+
     for (int i = 0; i < int(solution.size() - 1); i++)
     {
         distance += distanceMeasure->distance(solution[i], solution[i + 1]);

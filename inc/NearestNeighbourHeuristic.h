@@ -13,6 +13,7 @@ class NearestNeighbour
 {
 private:
     Parser parser;
+    std::string inputFile;
 
     unsigned numberOfNodes;
     std::vector<Node> solution;
@@ -23,7 +24,7 @@ public:
     NearestNeighbour() : numberOfNodes(0) {}
     void solve(std::string inputFile);
     void printSolution() const;
-    double totalDistance() const;
+    double totalDistance();
 };
 
 #endif // NEAREST_NEIGHBOUR_HEURISTIC_H
