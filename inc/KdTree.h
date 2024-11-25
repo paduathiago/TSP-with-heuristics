@@ -38,7 +38,7 @@ private:
 
     std::shared_ptr<Node> findNodeById(const std::shared_ptr<Node>& currentNode, int id, int depth) const;
     void print(const std::shared_ptr<Node>& current, int depth) const;
-    void print_preorder(const std::shared_ptr<Node>& current) const;
+    void print_preorder(const std::shared_ptr<Node>& current, char childType) const;
 };
 
 #endif // KD_TREE_H
