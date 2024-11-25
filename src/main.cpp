@@ -22,14 +22,8 @@ int main(int argc, char* argv[]) {
 
     NearestNeighbour nn;
     nn.solve(filename);
-    nn.printSolution();
-    // Parser parser;
-    // std::unique_ptr<DistanceMeasure> distanceMeasure = parser.getDistanceMeasure(filename);
-    // std::vector<Node> cities = parser.parseTSPFile(filename);
-    // KdTree tree(cities, std::move(distanceMeasure));
-
-    // tree.remove(cities[2]);
-    // tree.print_preorder();
+    // nn.printSolution();
+    std::cout << nn.totalDistance() << std::endl;
 
     return 0;
 }
