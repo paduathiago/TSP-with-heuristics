@@ -1,8 +1,10 @@
 #include "parser.h"
 
 #include <regex>
+#include <algorithm>
+#include <random>
 
-std::vector<Node> Parser::parseTSPFile(const std::string& filename)
+std::vector<Node> Parser::parseTSPFile(const std::string& filename, bool shuffle)
 {
     std::vector<Node> cities;
     std::ifstream file;
@@ -15,7 +17,8 @@ std::vector<Node> Parser::parseTSPFile(const std::string& filename)
     std::string line;
     bool readingNodes = false;
 
-    while (std::getline(file, line)) {
+    while (std::getline(file, line))
+    {
         // remove trailing spaces to make parsing easier
         line.erase(line.find_last_not_of(" \n\r\t") + 1);
 
@@ -38,8 +41,15 @@ std::vector<Node> Parser::parseTSPFile(const std::string& filename)
             cities.push_back(city);
         }
     }
-
     file.close();
+
+    if (shuffle)  // experimental
+    {
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(cities.begin(), cities.end(), g);
+    }
+
     return cities;
 }
 
