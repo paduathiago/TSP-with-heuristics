@@ -19,6 +19,8 @@ public:
 
     std::shared_ptr<Node> findNodeById(int id) const;
 
+    unsigned getSize() const { return size; }
+
     void print() const;
     void print_preorder() const;
 
