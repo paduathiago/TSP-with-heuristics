@@ -14,16 +14,29 @@
 int main(int argc, char* argv[]) {
     if (argc < 2)
     {
-        std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
+        std::cout << "Usage: " << argv[0] << " <filename> <mode>" << std::endl;
         return 1;
     }
 
     std::string filename = argv[1];
+    std::string mode = argv[2];
 
-    NearestNeighbour nn;
-    nn.solve(filename);
-    // nn.printSolution();
-    std::cout << nn.getTotalDistance() << std::endl;
+    if (mode == "NN")
+    {
+        NearestNeighbour nn;
+        nn.solve(filename);
+        // nn.printSolution();
+        std::cout << nn.getTotalDistance() << std::endl;
+    }
+    else if (mode == "VND")
+    {
+
+    }
+    else
+    {
+        std::cout << "Invalid mode" << std::endl;
+        return 1;
+    }
 
     return 0;
 }
