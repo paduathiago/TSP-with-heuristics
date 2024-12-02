@@ -9,8 +9,8 @@
 class KdTree
 {
 public:
-    KdTree(std::unique_ptr<DistanceMeasure> distanceMeasure);
-    KdTree(std::vector<Node>& nodes, std::unique_ptr<DistanceMeasure> distanceMeasure);
+    KdTree(std::shared_ptr<DistanceMeasure> distanceMeasure);
+    KdTree(std::vector<Node>& nodes, std::shared_ptr<DistanceMeasure> distanceMeasure);
     ~KdTree();
 
     void insert(const Node& node);
@@ -30,7 +30,7 @@ public:
 private:
     std::shared_ptr<Node> root;
     unsigned size;
-    std::unique_ptr<DistanceMeasure> distanceMeasure;
+    std::shared_ptr<DistanceMeasure> distanceMeasure;
 
     void insert(std::shared_ptr<Node>& currentNode, const Node& newNode, int depth);
     std::shared_ptr<Node> remove(std::shared_ptr<Node>& root, const Node& node, int depth);

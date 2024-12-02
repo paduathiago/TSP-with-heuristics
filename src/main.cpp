@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     NearestNeighbour nn;
     nn.solve(filename);
     // nn.printSolution();
-    std::cout << nn.totalDistance() << std::endl;
+    std::cout << nn.getTotalDistance() << std::endl;
 
     return 0;
 }

@@ -82,7 +82,7 @@ unsigned Parser::getNumberOfNodes(const std::string& filename) const
     return 0;
 }
 
-std::unique_ptr<DistanceMeasure> Parser::getDistanceMeasure(const std::string& filename) const
+std::shared_ptr<DistanceMeasure> Parser::getDistanceMeasure(const std::string& filename) const
 {
     std::ifstream file;
     file.open(filename);
@@ -102,11 +102,11 @@ std::unique_ptr<DistanceMeasure> Parser::getDistanceMeasure(const std::string& f
         std::regex att_regex(R"(EDGE_WEIGHT_TYPE\s*:\s*ATT)");
         if (std::regex_search(line, euc_2d_regex))
         {
-            return std::make_unique<EuclideanDistance>();
+            return std::make_shared<EuclideanDistance>();
         }
         else if (std::regex_search(line, att_regex))
         {
-            return std::make_unique<PseudoEuclideanDistance>();
+            return std::make_shared<PseudoEuclideanDistance>();
         }
     }
 

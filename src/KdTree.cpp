@@ -2,15 +2,15 @@
 
 #include <limits>
 
-KdTree::KdTree(std::unique_ptr<DistanceMeasure> distanceMeasure)
+KdTree::KdTree(std::shared_ptr<DistanceMeasure> distanceMeasure)
 {
     root = nullptr;
     size = 0;
-    this->distanceMeasure = std::move(distanceMeasure);
+    this->distanceMeasure = distanceMeasure;
 }
 
-KdTree::KdTree(std::vector<Node>& nodes, std::unique_ptr<DistanceMeasure> distanceMeasure)
-    : KdTree(std::move(distanceMeasure))
+KdTree::KdTree(std::vector<Node>& nodes, std::shared_ptr<DistanceMeasure> distanceMeasure)
+    : KdTree(distanceMeasure)
 {
     for (const Node& node : nodes)
         insert(node);

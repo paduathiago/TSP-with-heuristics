@@ -16,7 +16,7 @@ public:
     Parser() = default;
     std::vector<Node> parseTSPFile(const std::string& filename, bool shuffle = 0);
     unsigned getNumberOfNodes(const std::string& filename) const;
-    std::unique_ptr<DistanceMeasure> getDistanceMeasure(const std::string& filename) const;
+    std::shared_ptr<DistanceMeasure> getDistanceMeasure(const std::string& filename) const;
 };
 
 #endif // PARSER_H

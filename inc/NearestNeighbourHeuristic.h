@@ -14,17 +14,20 @@ class NearestNeighbour
 private:
     Parser parser;
     std::string inputFile;
+    unsigned totalDistance;
 
     unsigned numberOfNodes;
     std::vector<Node> solution;
-    std::unique_ptr<DistanceMeasure> distanceMeasure;
-    void setDistanceMeasure(const std::unique_ptr<DistanceMeasure> distanceMeasure);
+    std::shared_ptr<DistanceMeasure> distanceMeasure;
+    void setDistanceMeasure(const std::shared_ptr<DistanceMeasure> distanceMeasure);
 
 public:
-    NearestNeighbour() : numberOfNodes(0) {}
+    NearestNeighbour();
     void solve(std::string inputFile);
     void printSolution() const;
-    double totalDistance();
+    double computeTotalDistance();
+
+    unsigned getTotalDistance() const { return totalDistance; }
 };
 
 #endif // NEAREST_NEIGHBOUR_HEURISTIC_H

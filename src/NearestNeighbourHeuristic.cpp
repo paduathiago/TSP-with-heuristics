@@ -2,21 +2,27 @@
 
 #include <random>
 
+NearestNeighbour::NearestNeighbour()
+{
+    totalDistance = 0.0;
+    numberOfNodes = 0;
+}
+
 void NearestNeighbour::solve(std::string inputFile)
 {
     this->inputFile = inputFile;
 
     std::vector<Node> cities = parser.parseTSPFile(inputFile);
     numberOfNodes = parser.getNumberOfNodes(inputFile);
-    std::unique_ptr<DistanceMeasure> distanceMeasure = parser.getDistanceMeasure(inputFile);
-    setDistanceMeasure(std::move(distanceMeasure));
+    std::shared_ptr<DistanceMeasure> distanceMeasure = parser.getDistanceMeasure(inputFile);
+    setDistanceMeasure(distanceMeasure);
 
-    KdTree tree(cities, std::move(this->distanceMeasure));
+    KdTree tree(cities, distanceMeasure);
 
     std::random_device rd;
-    std::mt19937 gen(42);  // fixed seed
+    std::mt19937 gen(rd());
 
-    std::uniform_int_distribution<> dist(1, numberOfNodes);
+    std::uniform_int_distribution<> dist(5, 5);
 
     int randomId = dist(gen);
 
@@ -29,7 +35,9 @@ void NearestNeighbour::solve(std::string inputFile)
         oldNodeInSolution = tree.remove(*newNodeInSolution);
         if (!tree.empty())
             newNodeInSolution = tree.nearestNeighbour(*oldNodeInSolution);
+        totalDistance += distanceMeasure->distance(*newNodeInSolution, *oldNodeInSolution);
     }
+    totalDistance += distanceMeasure->distance(solution[solution.size() - 1], solution[0]);
 }
 
 void NearestNeighbour::printSolution() const
@@ -40,17 +48,14 @@ void NearestNeighbour::printSolution() const
     }
 }
 
-void NearestNeighbour::setDistanceMeasure(std::unique_ptr<DistanceMeasure> distanceMeasure)
+void NearestNeighbour::setDistanceMeasure(std::shared_ptr<DistanceMeasure> distanceMeasure)
 {
-    this->distanceMeasure = std::move(distanceMeasure);
+    this->distanceMeasure = distanceMeasure;
 }
 
-double NearestNeighbour::totalDistance()
+double NearestNeighbour::computeTotalDistance()
 {
-    float distance = 0.0;
-
-    std::unique_ptr<DistanceMeasure> distMeasure = parser.getDistanceMeasure(this->inputFile);
-    setDistanceMeasure(std::move(distMeasure));
+    double distance = 0.0;
 
     for (int i = 0; i < int(solution.size() - 1); i++)
     {
