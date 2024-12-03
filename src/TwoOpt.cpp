@@ -30,6 +30,10 @@ std::vector<Node> TwoOpt::run(double totalDistance, const std::vector<Node>& sol
                                      + distanceMeasure->distance(newSolution[i], newSolution[j])
                                      + distanceMeasure->distance(newSolution[i + 1], newSolution[(j + 1) % size]);
 
+                if (i == (j + 1) % size)  // This case might cause problems due to numerical errors
+                {
+                    continue;
+                }
                 if (deltaLength < 0)
                 {
                     std::reverse(newSolution.begin() + i + 1, newSolution.begin() + j + 1);  // ATENTION
