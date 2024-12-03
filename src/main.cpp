@@ -5,11 +5,12 @@
 #include <sstream>
 #include <string>
 
-#include "Node.h"
-#include "parser.h"
+#include "DistanceMeasure.h"
 #include "KdTree.h"
 #include "NearestNeighbourHeuristic.h"
-#include "DistanceMeasure.h"
+#include "Node.h"
+#include "parser.h"
+#include "VND.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 2)
@@ -30,7 +31,7 @@ int main(int argc, char* argv[]) {
     }
     else if (mode == "VND")
     {
-
+        VND vnd(filename);
     }
     else
     {

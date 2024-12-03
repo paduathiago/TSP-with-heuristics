@@ -10,8 +10,6 @@ NearestNeighbour::NearestNeighbour()
 
 void NearestNeighbour::solve(std::string inputFile)
 {
-    this->inputFile = inputFile;
-
     std::vector<Node> cities = parser.parseTSPFile(inputFile);
     numberOfNodes = parser.getNumberOfNodes(inputFile);
     std::shared_ptr<DistanceMeasure> distanceMeasure = parser.getDistanceMeasure(inputFile);

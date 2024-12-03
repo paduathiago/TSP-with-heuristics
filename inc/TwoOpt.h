@@ -6,9 +6,11 @@
 
 #include "DistanceMeasure.h"
 
-class TwoOpt {
+class TwoOpt
+{
 
 public:
+    TwoOpt() = default;
     TwoOpt(std::shared_ptr<DistanceMeasure> distanceMeasure, double totalDistance);
     std::vector<Node> run(double totalDistance, const std::vector<Node>& solution);
 

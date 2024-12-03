@@ -1,4 +1,4 @@
-#include "2Opt.h"
+#include "TwoOpt.h"
 #include "Node.h"
 #include "NearestNeighbourHeuristic.h"
 #include "DistanceMeasure.h"
