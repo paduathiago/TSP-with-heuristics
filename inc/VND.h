@@ -10,7 +10,9 @@ class VND
 
 public:
     VND(std::string inputFile);
-    std::vector<Node> run();
+    void run();
+
+    double getTotalDistance() const { return totalDistance; }
 
 private:
     NearestNeighbour initialNN;

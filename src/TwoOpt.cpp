@@ -6,16 +6,16 @@
 #include <vector>
 #include <algorithm>
 
-TwoOpt::TwoOpt(std::shared_ptr<DistanceMeasure> distanceMeasure, double totalDistance)
+TwoOpt::TwoOpt(std::shared_ptr<DistanceMeasure> distanceMeasure)
 {
     this->distanceMeasure = distanceMeasure;
-    this->totalDistance = totalDistance;
 }
 
 // Params should come from a NearestNeighbour object
 std::vector<Node> TwoOpt::run(double totalDistance, const std::vector<Node>& solution)
 {
     std::vector<Node> newSolution = solution;
+    this->foundDistance = totalDistance;
     bool improvement = true;
     while (improvement)
     {
@@ -23,17 +23,17 @@ std::vector<Node> TwoOpt::run(double totalDistance, const std::vector<Node>& sol
         int size = newSolution.size();
         for (int i = 0; i < size - 1; ++i)
         {
-            for (int k = i + 1; k < size - 1; ++k)
+            for (int j = i + 2; j < size; ++j)
             {
                 double deltaLength = -distanceMeasure->distance(newSolution[i], newSolution[i + 1])
-                                     -distanceMeasure->distance(newSolution[k], newSolution[k + 1])
-                                     + distanceMeasure->distance(newSolution[i], newSolution[k])
-                                     + distanceMeasure->distance(newSolution[i + 1], newSolution[k + 1]);
+                                     -distanceMeasure->distance(newSolution[j], newSolution[(j + 1) % size])
+                                     + distanceMeasure->distance(newSolution[i], newSolution[j])
+                                     + distanceMeasure->distance(newSolution[i + 1], newSolution[(j + 1) % size]);
 
                 if (deltaLength < 0)
                 {
-                    std::reverse(newSolution.begin() + i, newSolution.begin() + k + 1);  // ATENTION
-                    totalDistance += deltaLength;  // deltaLength is negative
+                    std::reverse(newSolution.begin() + i + 1, newSolution.begin() + j + 1);  // ATENTION
+                    foundDistance += deltaLength;  // deltaLength is negative
                     improvement = true;
                 }
             }

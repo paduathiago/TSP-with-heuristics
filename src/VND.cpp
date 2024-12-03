@@ -8,6 +8,11 @@ VND::VND(std::string inputFile)
     solution = initialNN.getSolution();
     totalDistance = initialNN.getTotalDistance();
 
-    twoOpt = TwoOpt(distanceMeasure, totalDistance);
+    twoOpt = TwoOpt(distanceMeasure);
 }
 
+void VND::run()
+{
+    solution = twoOpt.run(totalDistance, solution);
+    totalDistance = twoOpt.getTotalDistance();
+}
