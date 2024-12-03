@@ -1,3 +1,6 @@
+#ifndef TWO_OPT_H
+#define TWO_OPT_H
+
 #include <vector>
 #include <memory>
 
@@ -13,3 +16,5 @@ private:
     std::shared_ptr<DistanceMeasure> distanceMeasure;
     double totalDistance;
 };
+
+#endif // TWO_OPT_H
