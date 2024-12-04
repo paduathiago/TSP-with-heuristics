@@ -4,6 +4,7 @@
 #include "NearestNeighbourHeuristic.h"
 #include "parser.h"
 #include "TwoOpt.h"
+#include "ThreeOpt.h"
 
 class VND
 {
@@ -21,7 +22,10 @@ private:
     double totalDistance;
 
     TwoOpt twoOpt;
+    ThreeOpt threeOpt;
 
+    void runN1();
+    void runN2();
 
 };
 
