@@ -14,7 +14,7 @@ LIBS =
 
 # Source files
 SRC_FILES = $(SRC_DIR)/main.cpp $(SRC_DIR)/KdTree.cpp $(SRC_DIR)/parser.cpp $(SRC_DIR)/NearestNeighbourHeuristic.cpp \
-			$(SRC_DIR)/TwoOpt.cpp $(SRC_DIR)/VND.cpp
+			$(SRC_DIR)/TwoOpt.cpp $(SRC_DIR)/ThreeOpt.cpp $(SRC_DIR)/VND.cpp
 
 # Object files (inside build directory)
 OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
@@ -24,7 +24,7 @@ $(TARGET): $(OBJ_FILES)
 
 # Compile .cpp files to .o files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(OBJ_DIR)  # Cria o diretório build se não existir
+	@mkdir -p $(OBJ_DIR)  # Creates the build directory if it doesn't exist
 	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
 clean:
