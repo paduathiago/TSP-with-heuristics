@@ -12,7 +12,7 @@ class VND
 public:
     VND(std::string inputFile);
     void run();
-
+    double computeTotalDistance();
     double getTotalDistance() const { return totalDistance; }
 
 private:

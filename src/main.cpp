@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
         VND vnd(filename);
         vnd.run();
         std::cout << vnd.getTotalDistance() << std::endl;
+        std::cout << vnd.computeTotalDistance() << std::endl;
     }
     else
     {

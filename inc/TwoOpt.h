@@ -19,6 +19,8 @@ public:
 private:
     std::shared_ptr<DistanceMeasure> distanceMeasure;
     double foundDistance;
+
+    void reverseSegment(std::vector<Node>& tour, int startIndex, int endIndex);
 };
 
 #endif // TWO_OPT_H

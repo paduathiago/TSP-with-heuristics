@@ -12,6 +12,17 @@ VND::VND(std::string inputFile)
     threeOpt = ThreeOpt(distanceMeasure);
 }
 
+double VND::computeTotalDistance()
+{
+    double dist = 0.0;
+    for (int i = 0; i < int(solution.size() - 1); i++)
+    {
+        dist += distanceMeasure->distance(solution[i], solution[i + 1]);
+    }
+    dist += distanceMeasure->distance(solution[solution.size() - 1], solution[0]);
+    return dist;
+}
+
 void VND::run()
 {
     runN1();
@@ -22,6 +33,7 @@ void VND::runN1()
     solution = twoOpt.run(totalDistance, solution);
     totalDistance = twoOpt.getTotalDistance();
     std::cout << "Total distance after N1: " << totalDistance << std::endl;
+    // std::cout << "Real total distance: " << computeTotalDistance() << std::endl;
     runN2();
 }
 
@@ -37,5 +49,7 @@ void VND::runN2()
         runN1();
     }
     else
-        std::cout << "*done*" << std::endl;
+    {
+
+    }
 }

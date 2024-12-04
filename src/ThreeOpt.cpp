@@ -147,30 +147,30 @@ std::vector<Node> ThreeOpt::run(double totalDistance, const std::vector<Node>& s
             switch (bestMove.t)
             {
             case 1:
-                reverseSegment(newSolution, bestMove.k + 1 % size, bestMove.i);
+                reverseSegment(newSolution, (bestMove.k + 1) % size, bestMove.i);
                 break;
             case 2:
-                reverseSegment(newSolution, bestMove.j + 1 % size, bestMove.k);
+                reverseSegment(newSolution, (bestMove.j + 1) % size, bestMove.k);
                 break;
             case 3:
-                reverseSegment(newSolution, bestMove.i + 1 % size, bestMove.j);
+                reverseSegment(newSolution, (bestMove.i + 1) % size, bestMove.j);
                 break;
             case 4:
-                reverseSegment(newSolution, bestMove.j + 1 % size, bestMove.k);
-                reverseSegment(newSolution, bestMove.i + 1 % size, bestMove.j);
+                reverseSegment(newSolution, (bestMove.j + 1) % size, bestMove.k);
+                reverseSegment(newSolution, (bestMove.i + 1) % size, bestMove.j);
                 break;
             case 5:
-                reverseSegment(newSolution, bestMove.k + 1 % size, bestMove.i);
-                reverseSegment(newSolution, bestMove.i + 1 % size, bestMove.j);
+                reverseSegment(newSolution, (bestMove.k + 1) % size, bestMove.i);
+                reverseSegment(newSolution, (bestMove.i + 1) % size, bestMove.j);
                 break;
             case 6:
-                reverseSegment(newSolution, bestMove.k + 1 % size, bestMove.i);
-                reverseSegment(newSolution, bestMove.j + 1 % size, bestMove.k);
+                reverseSegment(newSolution, (bestMove.k + 1) % size, bestMove.i);
+                reverseSegment(newSolution, (bestMove.j + 1) % size, bestMove.k);
                 break;
             case 7:
-                reverseSegment(newSolution, bestMove.k + 1 % size, bestMove.i);
-                reverseSegment(newSolution, bestMove.i + 1 % size, bestMove.j);
-                reverseSegment(newSolution, bestMove.j + 1 % size, bestMove.k);
+                reverseSegment(newSolution, (bestMove.k + 1) % size, bestMove.i);
+                reverseSegment(newSolution, (bestMove.i + 1) % size, bestMove.j);
+                reverseSegment(newSolution, (bestMove.j + 1) % size, bestMove.k);
                 break;
             default:
                 break;
