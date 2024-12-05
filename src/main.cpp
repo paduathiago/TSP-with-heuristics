@@ -27,14 +27,12 @@ int main(int argc, char* argv[]) {
         NearestNeighbour nn;
         nn.solve(filename);
         std::cout << nn.getTotalDistance() << std::endl;
-        std::cout << nn.computeTotalDistance() << std::endl;
     }
     else if (mode == "VND")
     {
         VND vnd(filename);
         vnd.run();
         std::cout << vnd.getTotalDistance() << std::endl;
-        std::cout << vnd.computeTotalDistance() << std::endl;
     }
     else
     {

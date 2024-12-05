@@ -133,17 +133,14 @@ std::vector<Node> ThreeOpt::run(double totalDistance, const std::vector<Node>& s
                             bestMove.k = k;
                             bestMove.t = t;
                             bestMove.gain = std::abs(gainX);
-                            // std::cout << "i: " << i << " j: " << j << " k: " << k << " t: " << t << " gain: " << gainX << std::endl;
                             improvement = true;
                         }
                     }
                 }
             }
-
         }
         if(improvement)
         {
-            // std::cout << "Reverse: " << std::endl;
             switch (bestMove.t)
             {
             case 1:
@@ -175,7 +172,6 @@ std::vector<Node> ThreeOpt::run(double totalDistance, const std::vector<Node>& s
             default:
                 break;
             }
-            std::cout << "Gain: " << bestMove.gain << std::endl;
             foundDistance -= bestMove.gain;
         }
     }

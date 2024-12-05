@@ -16,8 +16,7 @@ class EuclideanDistance : public DistanceMeasure
 public:
     double distance(const Node& n1, const Node& n2) const override
     {
-        double dist = std::sqrt((n2.x - n1.x) * (n2.x - n1.x) + (n2.y - n1.y) * (n2.y - n1.y));
-        return dist;
+        return std::sqrt((n2.x - n1.x) * (n2.x - n1.x) + (n2.y - n1.y) * (n2.y - n1.y));
     }
 };
 
