@@ -13,7 +13,7 @@ class NearestNeighbour
 {
 private:
     Parser parser;
-    unsigned totalDistance;
+    double totalDistance;
 
     unsigned numberOfNodes;
     std::vector<Node> solution;
@@ -26,7 +26,7 @@ public:
     void printSolution() const;
     double computeTotalDistance();
 
-    unsigned getTotalDistance() const { return totalDistance; }
+    double getTotalDistance() const { return totalDistance; }
     std::vector<Node> getSolution() const { return solution; }
     std::shared_ptr<DistanceMeasure> getDistanceMeasure() const { return distanceMeasure; }
 };

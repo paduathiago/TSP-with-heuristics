@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
         NearestNeighbour nn;
         nn.solve(filename);
         std::cout << nn.getTotalDistance() << std::endl;
+        std::cout << nn.computeTotalDistance() << std::endl;
     }
     else if (mode == "VND")
     {

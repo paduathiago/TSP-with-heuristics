@@ -8,7 +8,6 @@
 
 class ThreeOpt
 {
-
 public:
     ThreeOpt() = default;
     ThreeOpt(std::shared_ptr<DistanceMeasure> distanceMeasure);

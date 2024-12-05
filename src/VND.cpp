@@ -33,7 +33,7 @@ void VND::runN1()
     solution = twoOpt.run(totalDistance, solution);
     totalDistance = twoOpt.getTotalDistance();
     std::cout << "Total distance after N1: " << totalDistance << std::endl;
-    // std::cout << "Real total distance: " << computeTotalDistance() << std::endl;
+    std::cout << "Real total distance: " << computeTotalDistance() << std::endl;
     runN2();
 }
 
@@ -45,7 +45,6 @@ void VND::runN2()
     totalDistance = threeOpt.getTotalDistance();
     if (totalDistance < initalDistance)
     {
-        std::cout << "back to N1" << std::endl;
         runN1();
     }
     else
@@ -53,3 +52,5 @@ void VND::runN2()
 
     }
 }
+
+

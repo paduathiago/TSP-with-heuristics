@@ -8,7 +8,6 @@
 
 class VND
 {
-
 public:
     VND(std::string inputFile);
     void run();

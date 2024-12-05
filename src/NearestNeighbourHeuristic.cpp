@@ -32,8 +32,10 @@ void NearestNeighbour::solve(std::string inputFile)
         solution.push_back(*newNodeInSolution);
         oldNodeInSolution = tree.remove(*newNodeInSolution);
         if (!tree.empty())
+        {
             newNodeInSolution = tree.nearestNeighbour(*oldNodeInSolution);
-        totalDistance += distanceMeasure->distance(*newNodeInSolution, *oldNodeInSolution);
+            totalDistance += distanceMeasure->distance(*newNodeInSolution, *oldNodeInSolution);
+        }
     }
     totalDistance += distanceMeasure->distance(solution[solution.size() - 1], solution[0]);
 }

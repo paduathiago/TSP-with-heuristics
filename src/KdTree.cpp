@@ -186,8 +186,7 @@ void KdTree::nearestNeighbour(const std::shared_ptr<Node>& root,
                               const Node& target,
                               std::shared_ptr<Node>& best,
                               double& bestDist,
-                              int depth
-                             ) const
+                              int depth) const
 {
     if (!root) return;
 
