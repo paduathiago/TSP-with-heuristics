@@ -32,8 +32,6 @@ void TwoOpt::reverseSegment(std::vector<Node>& tour, int startIndex, int endInde
     }
 }
 
-
-// Params should come from a NearestNeighbour object
 std::vector<Node> TwoOpt::run(double totalDistance, const std::vector<Node>& solution)
 {
     std::vector<Node> newSolution = solution;
