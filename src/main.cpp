@@ -5,12 +5,9 @@
 #include <sstream>
 #include <string>
 
-#include "DistanceMeasure.h"
-#include "KdTree.h"
 #include "NearestNeighbourHeuristic.h"
-#include "Node.h"
-#include "parser.h"
 #include "VND.h"
+#include "ILS.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 2)
@@ -33,6 +30,12 @@ int main(int argc, char* argv[]) {
         VND vnd(filename);
         vnd.run();
         std::cout << vnd.getTotalDistance() << std::endl;
+    }
+    else if (mode == "ILS")
+    {
+        ILS ils(filename);
+        ils.run();
+        // std::cout << ils.getTotalDistance() << std::endl;
     }
     else
     {

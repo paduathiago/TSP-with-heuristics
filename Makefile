@@ -14,7 +14,7 @@ LIBS =
 
 # Source files
 SRC_FILES = $(SRC_DIR)/main.cpp $(SRC_DIR)/KdTree.cpp $(SRC_DIR)/parser.cpp $(SRC_DIR)/NearestNeighbourHeuristic.cpp \
-			$(SRC_DIR)/TwoOpt.cpp $(SRC_DIR)/ThreeOpt.cpp $(SRC_DIR)/VND.cpp
+			$(SRC_DIR)/TwoOpt.cpp $(SRC_DIR)/ThreeOpt.cpp $(SRC_DIR)/VND.cpp $(SRC_DIR)/ILS.cpp
 
 # Object files (inside build directory)
 OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
