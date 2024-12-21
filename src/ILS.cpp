@@ -1,6 +1,8 @@
 #include "ILS.h"
 
 #include <algorithm>
+#include <cmath>
+#include <cstdlib>
 #include <random>
 #include <string>
 #include <vector>
@@ -17,7 +19,7 @@ ILS::ILS(std::string inputFile)
     threeOpt = ThreeOpt(distanceMeasure);
 }
 
-double ILS::computeTotalDistance()
+double ILS::computeTotalDistance(std::vector<Node> solution)
 {
     double dist = 0.0;
     for (int i = 0; i < int(solution.size() - 1); i++)
@@ -38,7 +40,7 @@ int random_int(int low, int high)
 std::vector<Node> ILS::doubleBridgeMove() const
 {
     unsigned pos[3];
-    std::vector<Node> newSolution = solution;
+    std::vector<Node> newSolution;
 
     pos[0] = random_int(1, solution.size() / 3);
     pos[1] = random_int(solution.size() / 3 + 1, solution.size()* 2/3);
@@ -51,8 +53,12 @@ std::vector<Node> ILS::doubleBridgeMove() const
     // std::vector<Node> seg3(solution.begin() + pos[1], solution.begin() + pos[2]);
     // std::vector<Node> seg4(solution.begin() + pos[2], solution.end());
 
-    std::vector<Node> newSolution;
-    newSolution.clear();
+    // newSolution.insert(newSolution.end(), seg1.begin(), seg1.end());
+    // newSolution.insert(newSolution.end(), seg4.begin(), seg4.end());
+    // newSolution.insert(newSolution.end(), seg3.begin(), seg3.end());
+    // newSolution.insert(newSolution.end(), seg2.begin(), seg2.end());
+
+    newSolution.reserve(solution.size());
 
     newSolution.insert(newSolution.end(), solution.begin(), solution.begin() + pos[0]);
     newSolution.insert(newSolution.end(), solution.begin() + pos[2], solution.end());
@@ -62,26 +68,56 @@ std::vector<Node> ILS::doubleBridgeMove() const
     return newSolution;
 }
 
-void ILS::run()
+bool ILS::acceptSolution(float temperature, double newDistance, bool alwaysAcceptBetterSolutions = true)
 {
-    // Solução inicial: Heurística construtiva com Nearest Neighbors.
+    double deltaE = newDistance - totalDistance;
 
+    if (deltaE <= 0 && alwaysAcceptBetterSolutions) // How inpactful is this?
+    {
+        return true; // Always accept better solutions
+    }
+    double probability = exp(-deltaE / temperature);
+    double randomValue = ((double) rand() / RAND_MAX);
+    return randomValue < probability;
+}
+
+float ILS::coolingSchedule(float currentTemperature, float alpha)
+{
+    return currentTemperature * alpha;
+}
+
+void auxPrint(std::vector<Node> solution)
+{
     for (const auto& node : solution) {
         std::cout << node.id << " ";
     }
     std::cout << std::endl;
+}
 
-    std::vector<Node> newSolution = doubleBridgeMove();
-    for (const auto& node : newSolution) {
-        std::cout << node.id << " ";
-    }
-    std::cout << std::endl;
+void ILS::run(float initialTemperature, float alpha)
+{
+    // Solução inicial: Heurística construtiva com Nearest Neighbors.
 
-    // Busca Local: 3-opt
+    float temperature = initialTemperature;
+    float minTemperature = 0.0001;
+
     solution = threeOpt.run(totalDistance, solution);
     totalDistance = threeOpt.getTotalDistance();
 
-    // Perturbação: Simples troca de dois vértices ou remoção e reinserção de um subcaminho.
-    // Critério de Aceitação: boltzmann distribution
+    while (temperature > minTemperature)
+    {
+        std::vector<Node> perturbedSolution = doubleBridgeMove();
+        double perturbedDistance = computeTotalDistance(perturbedSolution);  // EXPENSIVE OPERATION
 
+        std::vector<Node> newSolution = threeOpt.run(perturbedDistance, perturbedSolution);
+        double newDistance = threeOpt.getTotalDistance();
+
+        if (acceptSolution(temperature, newDistance))
+        {
+            solution = newSolution;
+            totalDistance = newDistance;
+        }
+
+        temperature = coolingSchedule(temperature, alpha);  // Acceptance criteria: boltzmann distribution
+    }
 }

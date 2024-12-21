@@ -33,9 +33,12 @@ int main(int argc, char* argv[]) {
     }
     else if (mode == "ILS")
     {
+        float initialTemperature = 1000;
+        float alpha = 0.999;
+
         ILS ils(filename);
-        ils.run();
-        // std::cout << ils.getTotalDistance() << std::endl;
+        ils.run(initialTemperature, alpha);
+        std::cout << ils.getTotalDistance() << std::endl;
     }
     else
     {
