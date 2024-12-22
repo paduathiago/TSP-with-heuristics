@@ -37,14 +37,6 @@ int random_int(int low, int high)
     return dist(rng);
 }
 
-void auxPrint(std::vector<Node> solution)
-{
-    for (const auto& node : solution) {
-        std::cout << node.id << " ";
-    }
-    std::cout << std::endl;
-}
-
 std::pair<std::vector<Node>, double> ILS::doubleBridgeMove() const
 {
     unsigned pos[3];
@@ -74,29 +66,14 @@ std::pair<std::vector<Node>, double> ILS::doubleBridgeMove() const
     newSolution.insert(newSolution.end(), solution.begin() + pos[1], solution.begin() + pos[2]);
     newSolution.insert(newSolution.end(), solution.begin() + pos[0], solution.begin() + pos[1]);
 
-    //DEBUG
-    // double newDistanceCheck = computeTotalDistance(newSolution);
-    // if (newDistance - newDistanceCheck > 0.0001)
-    // {
-    //     std::cout << "ERROR: newDistance != newDistanceCheck" << std::endl;
-    //     std::cout << "newDistance: " << newDistance << std::endl;
-    //     std::cout << "newDistanceCheck: " << newDistanceCheck << std::endl;
-    //     std::cout << "Solution: ";
-    //     auxPrint(solution);
-    //     std::cout << "checking: ";
-    //     auxPrint(newSolution);
-    //     std::cout << "pos: " << pos[0] << " " << pos[1] << " " << pos[2] << std::endl;
-    //     exit(1);
-    // }
-
     return std::make_pair(newSolution, newDistance);
 }
 
-bool ILS::acceptSolution(float temperature, double newDistance, bool alwaysAcceptBetterSolutions = true)
+bool ILS::acceptSolution(float temperature, double newDistance)
 {
     double deltaE = newDistance - totalDistance;
 
-    if (deltaE <= 0 && alwaysAcceptBetterSolutions) // How inpactful is this?
+    if (deltaE <= 0)
     {
         return true; // Always accept better solutions
     }
@@ -112,23 +89,18 @@ float ILS::coolingSchedule(float currentTemperature, float alpha)
 
 void ILS::run(float initialTemperature, float alpha)
 {
-    // Solução inicial: Heurística construtiva com Nearest Neighbors.
-
     float temperature = initialTemperature;
     float minTemperature = 0.0001;
 
     solution = threeOpt.run(totalDistance, solution);
     totalDistance = threeOpt.getTotalDistance();
 
-    double bestDistance = totalDistance;
     std::vector<Node> bestSolution = solution;
+    double bestDistance = totalDistance;
 
     while (temperature > minTemperature)
     {
-        std::pair<std::vector<Node>, double> move = doubleBridgeMove();
-        std::vector<Node> perturbedSolution = move.first;
-        double perturbedDistance = move.second;
-        // double perturbedDistance = computeTotalDistance(perturbedSolution);  // EXPENSIVE OPERATION
+        auto [perturbedSolution, perturbedDistance] = doubleBridgeMove();
 
         std::vector<Node> newSolution = threeOpt.run(perturbedDistance, perturbedSolution);
         double newDistance = threeOpt.getTotalDistance();
@@ -143,7 +115,6 @@ void ILS::run(float initialTemperature, float alpha)
                 bestSolution = solution;
             }
         }
-
         temperature = coolingSchedule(temperature, alpha);  // Acceptance criteria: boltzmann distribution
     }
     solution = bestSolution;

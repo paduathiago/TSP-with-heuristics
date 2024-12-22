@@ -22,7 +22,7 @@ private:
 
     ThreeOpt threeOpt;
 
-    bool acceptSolution(float temperature, double newDistance, bool alwaysAcceptBetterSolutions);
+    bool acceptSolution(float temperature, double newDistance);
     float coolingSchedule(float temperature, float alpha);
 };
 

@@ -33,8 +33,8 @@ int main(int argc, char* argv[]) {
     }
     else if (mode == "ILS")
     {
-        float initialTemperature = 1000;
-        float alpha = 0.999;
+        float initialTemperature = argc > 3 ? std::stof(argv[3]) : 600;
+        float alpha = argc > 4 ? std::stof(argv[4]) : 0.99;
 
         ILS ils(filename);
         ils.run(initialTemperature, alpha);
