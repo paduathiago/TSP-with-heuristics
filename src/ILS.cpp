@@ -14,12 +14,12 @@ ILS::ILS(std::string inputFile)
 
     distanceMeasure = initialNN.getDistanceMeasure();
     solution = initialNN.getSolution();
-    totalDistance = initialNN.getTotalDistance();
+    totalDistance = float(initialNN.getTotalDistance());
 
     threeOpt = ThreeOpt(distanceMeasure);
 }
 
-double ILS::computeTotalDistance(std::vector<Node> solution)
+double ILS::computeTotalDistance(std::vector<Node> solution) const
 {
     double dist = 0.0;
     for (int i = 0; i < int(solution.size() - 1); i++)
@@ -37,26 +37,35 @@ int random_int(int low, int high)
     return dist(rng);
 }
 
-std::vector<Node> ILS::doubleBridgeMove() const
+void auxPrint(std::vector<Node> solution)
+{
+    for (const auto& node : solution) {
+        std::cout << node.id << " ";
+    }
+    std::cout << std::endl;
+}
+
+std::pair<std::vector<Node>, double> ILS::doubleBridgeMove() const
 {
     unsigned pos[3];
     std::vector<Node> newSolution;
+    double newDistance = totalDistance;
 
     pos[0] = random_int(1, solution.size() / 3);
     pos[1] = random_int(solution.size() / 3 + 1, solution.size()* 2/3);
-    pos[2] = random_int(solution.size() * 2 / 3 + 1, solution.size());
+    pos[2] = random_int(solution.size() * 2 / 3 + 1, solution.size() - 1);
 
-    std::sort(pos, pos + 4);
+    std::sort(std::begin(pos), std::end(pos));
 
-    // std::vector<Node> seg1(solution.begin(), solution.begin() + pos[0]);
-    // std::vector<Node> seg2(solution.begin() + pos[0], solution.begin() + pos[1]);
-    // std::vector<Node> seg3(solution.begin() + pos[1], solution.begin() + pos[2]);
-    // std::vector<Node> seg4(solution.begin() + pos[2], solution.end());
+    newDistance -= distanceMeasure->distance(solution[pos[0] - 1], solution[pos[0]]);
+    newDistance -= distanceMeasure->distance(solution[pos[1] - 1], solution[pos[1]]);
+    newDistance -= distanceMeasure->distance(solution[pos[2] - 1], solution[pos[2]]);
+    newDistance -= distanceMeasure->distance(solution.back(), solution.front());
 
-    // newSolution.insert(newSolution.end(), seg1.begin(), seg1.end());
-    // newSolution.insert(newSolution.end(), seg4.begin(), seg4.end());
-    // newSolution.insert(newSolution.end(), seg3.begin(), seg3.end());
-    // newSolution.insert(newSolution.end(), seg2.begin(), seg2.end());
+    newDistance += distanceMeasure->distance(solution[pos[0] - 1], solution[pos[2]]);
+    newDistance += distanceMeasure->distance(solution.back(), solution[pos[1]]);
+    newDistance += distanceMeasure->distance(solution[pos[2] - 1], solution[pos[0]]);
+    newDistance += distanceMeasure->distance(solution[pos[1] - 1], solution.front());
 
     newSolution.reserve(solution.size());
 
@@ -65,7 +74,22 @@ std::vector<Node> ILS::doubleBridgeMove() const
     newSolution.insert(newSolution.end(), solution.begin() + pos[1], solution.begin() + pos[2]);
     newSolution.insert(newSolution.end(), solution.begin() + pos[0], solution.begin() + pos[1]);
 
-    return newSolution;
+    //DEBUG
+    // double newDistanceCheck = computeTotalDistance(newSolution);
+    // if (newDistance - newDistanceCheck > 0.0001)
+    // {
+    //     std::cout << "ERROR: newDistance != newDistanceCheck" << std::endl;
+    //     std::cout << "newDistance: " << newDistance << std::endl;
+    //     std::cout << "newDistanceCheck: " << newDistanceCheck << std::endl;
+    //     std::cout << "Solution: ";
+    //     auxPrint(solution);
+    //     std::cout << "checking: ";
+    //     auxPrint(newSolution);
+    //     std::cout << "pos: " << pos[0] << " " << pos[1] << " " << pos[2] << std::endl;
+    //     exit(1);
+    // }
+
+    return std::make_pair(newSolution, newDistance);
 }
 
 bool ILS::acceptSolution(float temperature, double newDistance, bool alwaysAcceptBetterSolutions = true)
@@ -86,14 +110,6 @@ float ILS::coolingSchedule(float currentTemperature, float alpha)
     return currentTemperature * alpha;
 }
 
-void auxPrint(std::vector<Node> solution)
-{
-    for (const auto& node : solution) {
-        std::cout << node.id << " ";
-    }
-    std::cout << std::endl;
-}
-
 void ILS::run(float initialTemperature, float alpha)
 {
     // Solução inicial: Heurística construtiva com Nearest Neighbors.
@@ -104,10 +120,15 @@ void ILS::run(float initialTemperature, float alpha)
     solution = threeOpt.run(totalDistance, solution);
     totalDistance = threeOpt.getTotalDistance();
 
+    double bestDistance = totalDistance;
+    std::vector<Node> bestSolution = solution;
+
     while (temperature > minTemperature)
     {
-        std::vector<Node> perturbedSolution = doubleBridgeMove();
-        double perturbedDistance = computeTotalDistance(perturbedSolution);  // EXPENSIVE OPERATION
+        std::pair<std::vector<Node>, double> move = doubleBridgeMove();
+        std::vector<Node> perturbedSolution = move.first;
+        double perturbedDistance = move.second;
+        // double perturbedDistance = computeTotalDistance(perturbedSolution);  // EXPENSIVE OPERATION
 
         std::vector<Node> newSolution = threeOpt.run(perturbedDistance, perturbedSolution);
         double newDistance = threeOpt.getTotalDistance();
@@ -116,8 +137,15 @@ void ILS::run(float initialTemperature, float alpha)
         {
             solution = newSolution;
             totalDistance = newDistance;
+            if (totalDistance < bestDistance)
+            {
+                bestDistance = totalDistance;
+                bestSolution = solution;
+            }
         }
 
         temperature = coolingSchedule(temperature, alpha);  // Acceptance criteria: boltzmann distribution
     }
+    solution = bestSolution;
+    totalDistance = bestDistance;
 }

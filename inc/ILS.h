@@ -10,9 +10,9 @@ class ILS
 public:
     ILS(std::string inputFile);
     void run(float initialTemperature, float alpha);
-    double computeTotalDistance(std::vector<Node> solution);
+    double computeTotalDistance(std::vector<Node> solution) const;
     double getTotalDistance() const { return totalDistance; }
-    std::vector<Node> doubleBridgeMove() const;
+    std::pair<std::vector<Node>, double> doubleBridgeMove() const;
 
 private:
     NearestNeighbour initialNN;
